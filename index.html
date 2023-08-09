@@ -1,116 +1,15 @@
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>NMS Color Parser</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="author" content="RogerHN">
-  <meta name="description" content="Parser that visualizes color palettes in NMS files">
-  <meta name="keywords" content="No Man's Sky, BASECOLOURPALETTES">
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NMS Colour Parser</title>
 </head>
 
 <body>
-  <div class="app">
-    <header>
-      <img src="./src/img/logo-nms.png" alt="No Man's Sky Logo" class="nmslogo">
-      <span>Color parser</span>
-      <div class="restart"></div>
-      <div class="menu"></div>
-    </header>
-    <main>
-      <section class="input">
-        <div id="drop-area">
-          <p class="error hidden"></p>
-          <p class="info">Drag the EXML of a color pallete here or select it using the button below.</p>
-          <input type="file" id="fileElem" onchange="handleFile(this.files)">
-          <label for="fileElem" class="button">Select</label>
-          <p class="info">Supported files:</p>
-          <div class="supported-files"></div>
-          <p class="info small">You can also click one of the files above to load them.</p>
-          <p class="info small">Files from version Waypoint patch <span class="gameVersion">4.06</span></p>
-        </div>
-      </section>
-      <section class="output hidden"></section>
-      <section class="settings">
-        <div class="settings-header">
-          <button class="settings-close"></button>
-          <div class="title">Settings</div>
-        </div>
-        <div class="options">
-          <div class="block" data-option="startIndexZero">
-            <p class="title">Start color index 0 instead of 1</p>
-            <span class="checkmark">
-          </div>
-          <div class="block" data-option="_16colorsPerLine">
-            <p class="title">Show 16 colors per line</p>
-            <span class="checkmark">
-          </div>
-          <div class="block" data-option="hideWhitePalettes">
-            <p class="title">Show palette with all colors white/black</p>
-            <span class="checkmark">
-          </div>
-        </div>
-        <div class="custom-color">
-          <div class="title">Custom color palette:</div>
-        </div>
-        <div class="color-options">
-          <div class="color-option" data-option="SkyColour">
-            <p class="title">SkyColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="SkyUpperColour">
-            <p class="title">SkyUpperColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="SkySolarColour">
-            <p class="title">SkySolarColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="HorizonColour">
-            <p class="title">HorizonColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="SunColour">
-            <p class="title">SunColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="FogColour">
-            <p class="title">FogColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="HeightFogColour">
-            <p class="title">HeightFogColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="LightColour">
-            <p class="title">LightColour</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="CloudColour1">
-            <p class="title">CloudColour1</p>
-            <span class="checkmark">
-          </div>
-          <div class="color-option" data-option="CloudColour2">
-            <p class="title">CloudColour2</p>
-            <span class="checkmark">
-          </div>
-        </div>
-      </section>
-      <section class="overlay"></section>
-    </main>
-    <footer>
-      <p>Created by RogerHN</p>
-      <span class="version"></span>
-    </footer>
-  </div>
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="https://unpkg.com/tippy.js@6"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.2/tinycolor.min.js"></script>
-  <script src='js/xml2json.js'></script>
-  <script src="js/script.js"></script>
-  
+  <div id="app" class="container-fluid"></div>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
