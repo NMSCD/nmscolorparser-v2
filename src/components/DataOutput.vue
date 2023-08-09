@@ -13,23 +13,56 @@ interface ColourData {
   A: number;
 }
 
+interface PaletteData {
+  name: string;
+  data: ColourData[];
+}
+
 const allColourSections = computed(() => {
   const sections = fileXmlDoc.value?.querySelectorAll('[value="Colour.xml"]');
   if (!sections) return [];
-  const data: ColourData[] = [];
+
+  const data: PaletteData[][] = [];
+
+  let prevElement: Element;
 
   for (const section of Array.from(sections)) {
+    const colourName =
+      section.getAttribute('name') ?? section.closest('[value="GcPaletteData.xml"]')?.getAttribute('name');
+
+    if (!colourName) continue;
+
+    const parent = section.parentElement!;
+
+    const paletteData: PaletteData = {
+      name: colourName,
+      data: [],
+    };
+
+    const isSameParent = parent === prevElement!;
+
+    if (!isSameParent) {
+      data.push([paletteData]);
+    }
+
+    const matchingSection = data[data.length - 1].find((item) => item.name === colourName);
+
+    const colourObj = !isSameParent ? paletteData : matchingSection ?? paletteData;
+
+    if (!matchingSection) data[data.length - 1].push(paletteData);
+
     const children = section.children;
-    const dataObj = {
+    const colourData: ColourData = {
       R: getColourValue(children[0]),
       G: getColourValue(children[1]),
       B: getColourValue(children[2]),
       A: getColourValue(children[3]),
     };
 
-    data.push(dataObj);
+    colourObj.data.push(colourData);
+    prevElement = parent;
   }
-  console.log(data.length);
+
   return data;
 });
 
@@ -42,44 +75,84 @@ function getColourValue(element: Element) {
   const colourVal = parseFloat(val) * multiplier;
   return colourVal;
 }
+
+const getBackgroundColour = (colourObj: ColourData) =>
+  `rgba(${colourObj.R}, ${colourObj.G}, ${colourObj.B}, ${colourObj.A})`;
 </script>
 
 <template>
-  <div>Results:</div>
-
-  <div :class="allColourSections.length === 64 ? 'grid' : 'list'">
+  <div class="colour-wrapper">
     <div
-      v-for="(dataObj, index) in allColourSections"
-      :style="{ 'background-color': `rgba(${dataObj.R}, ${dataObj.G}, ${dataObj.B}, ${dataObj.A})` }"
+      v-for="colourSection in allColourSections"
+      class="colour-section"
     >
-      {{ index + 1 }}
+      <div
+        v-for="(dataObj, dataIndex) in colourSection"
+        :class="{ 'colour-list': dataObj.data.length !== 64 }"
+        class="colour-item"
+      >
+        <div class="colour-name">
+          {{ dataObj.name }}
+        </div>
+        <div :class="{ 'colour-grid': dataObj.data.length === 64 }">
+          <div
+            v-for="(colourObj, index) in dataObj.data"
+            :style="{ 'background-color': getBackgroundColour(colourObj) }"
+            class="colour-box"
+          >
+            {{ (dataObj.data.length === 64 ? index : dataIndex) + 1 }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.grid {
-  --size: 2rem;
-  display: grid;
-  grid-template-columns: repeat(8, var(--size));
+$size: 2rem;
 
-  & > * {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: var(--size);
-  }
+.colour-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.list {
-  --size: 2rem;
+.colour-section {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.colour-grid,
+.colour-list {
+  border: 1px solid var(--color);
+}
+
+.colour-grid {
   display: grid;
-  grid-template-columns: 2rem;
-  & > * {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: var(--size);
-  }
+  grid-template-columns: repeat(8, auto);
+}
+
+.colour-list {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.colour-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: $size;
+  aspect-ratio: 1;
+  color: white;
+  text-shadow:
+    1px 1px 1px #1d1d1d,
+    -1px 1px 1px #1d1d1d,
+    -1px -1px 1px #1d1d1d,
+    1px -1px 1px #1d1d1d;
 }
 </style>

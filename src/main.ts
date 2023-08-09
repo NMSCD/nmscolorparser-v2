@@ -1,4 +1,4 @@
-//import '@picocss/pico';
+import '@picocss/pico';
 import './css/style.scss';
 
 import { createApp } from 'vue'
